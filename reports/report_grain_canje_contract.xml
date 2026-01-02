@@ -1,0 +1,63 @@
+<odoo>
+    <template id="report_grain_canje_contract">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2>Contrato de canje de granos</h2>
+                <p>
+                    <strong>N° Contrato:</strong> <span t-esc="doc.name"/><br/>
+                    <strong>Fecha:</strong> <span t-esc="doc.date"/><br/>
+                    <strong>Campaña:</strong> <span t-esc="doc.campaign_id.name or ''"/><br/>
+                    <strong>Compañía:</strong> <span t-esc="doc.company_id.name"/>
+                </p>
+
+                <h3>Partes</h3>
+                <p>
+                    <strong>Productor:</strong> <span t-esc="doc.producer_id.display_name"/><br/>
+                    <strong>Proveedor de insumos:</strong> <span t-esc="doc.supplier_id.display_name"/>
+                </p>
+
+                <h3>Detalle del canje</h3>
+                <p>
+                    <strong>Grano:</strong> <span t-esc="doc.product_id.display_name"/><br/>
+                    <strong>TN pactadas:</strong> <span t-esc="doc.tn_pactadas"/><br/>
+                    <strong>TN desde MRV:</strong> <span t-esc="doc.tn_mrv"/><br/>
+                    <strong>TN aplicadas:</strong> <span t-esc="doc.tn_aplicadas"/><br/>
+                    <strong>TN disponibles:</strong> <span t-esc="doc.tn_disponibles"/><br/>
+                    <strong>Precio ref. por TN:</strong> <span t-esc="doc.precio_ref"/>
+                </p>
+
+                <h3>Aplicaciones a facturas de proveedor</h3>
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Factura proveedor</th>
+                            <th>TN aplicadas</th>
+                            <th>Monto equivalente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.application_ids" t-as="app">
+                            <td t-esc="app.date"/>
+                            <td t-esc="app.move_id.name"/>
+                            <td t-esc="app.tn_aplicadas"/>
+                            <td>
+                                <span t-esc="app.amount"/>
+                                <span t-esc="app.currency_id.symbol"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <record id="action_report_grain_canje_contract" model="ir.actions.report">
+        <field name="name">Contrato de canje</field>
+        <field name="model">grain.canje.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">grain_canje_triangular.report_grain_canje_contract</field>
+        <field name="report_file">grain_canje_triangular.report_grain_canje_contract</field>
+        <field name="print_report_name">'Contrato de canje - %s' % (object.name)</field>
+    </record>
+</odoo>

@@ -1,0 +1,9 @@
+<odoo>
+    <record id="seq_grain_canje_contract" model="ir.sequence">
+        <field name="name">Contrato de Canje de Granos</field>
+        <field name="code">grain.canje.contract</field>
+        <field name="prefix">CANJE-%(year)s-</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

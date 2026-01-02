@@ -1,0 +1,24 @@
+<odoo>
+    <record id="action_grain_liquidation" model="ir.actions.act_window">
+        <field name="name">Liquidaciones (LPG)</field>
+        <field name="res_model">grain.liquidation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_grain_liquidation_root"
+              name="Canje / Granos"
+              parent="account.menu_finance_entries"
+              sequence="58"/>
+
+    <menuitem id="menu_grain_liquidation"
+              name="Liquidaciones (LPG)"
+              parent="menu_grain_liquidation_root"
+              action="action_grain_liquidation"
+              sequence="10"/>
+
+    <menuitem id="menu_register_lpg"
+              name="Registrar LPG"
+              parent="menu_grain_liquidation_root"
+              action="action_register_grain_lpg_wizard"
+              sequence="20"/>
+</odoo>

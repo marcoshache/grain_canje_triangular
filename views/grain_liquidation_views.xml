@@ -1,0 +1,59 @@
+<odoo>
+    <record id="view_grain_liquidation_tree" model="ir.ui.view">
+        <field name="name">grain.liquidation.tree</field>
+        <field name="model">grain.liquidation</field>
+        <field name="arch" type="xml">
+            <tree string="Liquidaciones (LPG)">
+                <field name="date"/>
+                <field name="producer_id"/>
+                <field name="qty_tn"/>
+                <field name="price_per_tn"/>
+                <field name="amount"/>
+                <field name="state"/>
+                <field name="move_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_grain_liquidation_form" model="ir.ui.view">
+        <field name="name">grain.liquidation.form</field>
+        <field name="model">grain.liquidation</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación (LPG)">
+                <header>
+                    <button name="action_post" string="Publicar" type="object" class="btn-primary"
+                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                    <button name="action_set_draft" string="Volver a borrador" type="object" class="btn-secondary"
+                            attrs="{'invisible': [('state','!=','cancel')]}"/>
+                    <button name="action_cancel" string="Cancelar" type="object" class="btn-secondary"
+                            attrs="{'invisible': [('state','=','cancel')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancel"/>
+                </header>
+
+                <header>
+                    <button name="action_open_bill" type="object" string="Ver Vendor Bill" class="btn-primary"
+                            attrs="{'invisible': [('move_id','=',False)]}"/>
+                    </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="producer_id"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="qty_tn"/>
+                            <field name="price_per_tn"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Contabilidad">
+                        <field name="clearing_account_id"/>
+                        <field name="journal_id"/>
+                        <field name="move_id" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

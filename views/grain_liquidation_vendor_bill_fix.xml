@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_grain_liquidation_vendor_bill_fix" model="ir.ui.view">
+        <field name="name">grain.liquidation.form.vendor.bill.fix</field>
+        <field name="model">grain.liquidation</field>
+        <field name="inherit_id" ref="grain_canje_triangular.view_grain_liquidation_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Si la vista tenía un statusbar duplicado dentro del sheet, lo removemos -->
+            <xpath expr="//sheet//field[@name='state' and @widget='statusbar']" position="replace"/>
+
+            <!-- Botón para abrir la Vendor Bill vinculada -->
+            <xpath expr="//header" position="inside">
+                <field name="vendor_bill_id" invisible="1"/>
+                <button name="action_open_vendor_bill"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        attrs="{'invisible': [('vendor_bill_id', '=', False)]}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Factura prov. (LPG)</span>
+                    </div>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

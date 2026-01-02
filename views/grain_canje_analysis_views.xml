@@ -1,0 +1,52 @@
+<odoo>
+    <!-- Tree de aplicaciones -->
+    <record id="view_grain_canje_application_tree" model="ir.ui.view">
+        <field name="name">grain.canje.application.tree</field>
+        <field name="model">grain.canje.application</field>
+        <field name="arch" type="xml">
+            <tree string="Aplicaciones de canje">
+                <field name="date"/>
+                <field name="campaign_id"/>
+                <field name="producer_id"/>
+                <field name="supplier_id"/>
+                <field name="product_id"/>
+                <field name="tn_aplicadas"/>
+                <field name="amount"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="contract_id"/>
+                <field name="move_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Pivot: mapa campaña / cereal / proveedor -->
+    <record id="view_grain_canje_application_pivot" model="ir.ui.view">
+        <field name="name">grain.canje.application.pivot</field>
+        <field name="model">grain.canje.application</field>
+        <field name="arch" type="xml">
+            <pivot string="Mapa campaña / cereal">
+                <field name="tn_aplicadas" type="measure"/>
+                <field name="amount" type="measure"/>
+                <field name="campaign_id" type="row"/>
+                <field name="product_id" type="col"/>
+                <field name="supplier_id"/>
+                <field name="producer_id"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Acción análisis -->
+    <record id="action_grain_canje_application_analysis" model="ir.actions.act_window">
+        <field name="name">Aplicaciones de canje</field>
+        <field name="res_model">grain.canje.application</field>
+        <field name="view_mode">pivot,tree</field>
+        <field name="view_id" ref="view_grain_canje_application_pivot"/>
+    </record>
+
+    <!-- Menú: Mapa de campaña / cereal (TN por proveedor la sacás agrupando por proveedor) -->
+    <menuitem id="menu_grain_canje_application_analysis"
+              name="Mapa canje (campaña / cereal)"
+              parent="account.menu_finance_entries"
+              action="action_grain_canje_application_analysis"
+              sequence="61"/>
+</odoo>
