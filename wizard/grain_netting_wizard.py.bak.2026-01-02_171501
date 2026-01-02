@@ -1,0 +1,121 @@
+# -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+
+class GrainNettingWizard(models.TransientModel):
+    _name = "grain.netting.wizard"
+    _description = "Compensación Canje (A/R vs A/P)"
+
+    company_id = fields.Many2one("res.company", required=True, default=lambda self: self.env.company)
+    currency_id = fields.Many2one(related="company_id.currency_id", readonly=True)
+
+    move_id = fields.Many2one("account.move", string="Factura cliente (Insumos)", required=True, readonly=True)
+    producer_id = fields.Many2one("res.partner", string="Productor", required=True, readonly=True)
+
+    liquidation_id = fields.Many2one(
+        "grain.liquidation",
+        string="Liquidación (LPG/LSG)",
+        required=True,
+        domain="[('state','=','posted'),('producer_id','=',producer_id),('move_id','!=',False)]",
+    )
+
+    bill_id = fields.Many2one(
+        "account.move",
+        string="Vendor Bill (desde Liquidación)",
+        related="liquidation_id.move_id",
+        readonly=True,
+    )
+
+    # ✅ ALIAS de compatibilidad: si en DB quedó una vista vieja que usa grain_bill_id, no rompe.
+    grain_bill_id = fields.Many2one(
+        "account.move",
+        string="Vendor Bill Granos (compat)",
+        related="bill_id",
+        readonly=True,
+    )
+
+    amount = fields.Monetary(string="Importe a compensar", currency_field="currency_id", required=True)
+
+    @api.onchange("liquidation_id", "move_id")
+    def _onchange_amount_default(self):
+        for rec in self:
+            if rec.liquidation_id and rec.bill_id and rec.move_id:
+                rec.amount = min(rec.move_id.amount_residual, rec.bill_id.amount_residual)
+
+    def action_net(self):
+        self.ensure_one()
+
+        if self.move_id.move_type != "out_invoice" or self.move_id.state != "posted":
+            raise UserError(_("La factura cliente debe estar publicada (posted)."))
+
+        if not self.bill_id:
+            raise UserError(_("La liquidación seleccionada no tiene Vendor Bill vinculada."))
+
+        if self.bill_id.move_type != "in_invoice" or self.bill_id.state != "posted":
+            raise UserError(_("La Vendor Bill de la liquidación debe estar publicada (posted)."))
+
+        if self.bill_id.payment_state == "paid":
+            raise UserError(_("La Vendor Bill de la liquidación ya está pagada."))
+
+        if not self.company_id.grain_netting_journal_id:
+            raise UserError(_("Configurá el diario de compensaciones (Asiento) en Ajustes de la compañía."))
+
+        if self.company_id.grain_netting_journal_id.type != "general":
+            raise UserError(_("El Diario Compensaciones (Asiento) debe ser de tipo 'Varios / General'."))
+
+        max_net = min(self.move_id.amount_residual, self.bill_id.amount_residual)
+        if self.amount <= 0:
+            raise UserError(_("El importe debe ser mayor a 0."))
+        if self.amount - max_net > 0.00001:
+            raise UserError(_("El importe excede el residual (máx: %s).") % max_net)
+
+        partner = self.producer_id
+        recv_acc = partner.property_account_receivable_id
+        pay_acc = partner.property_account_payable_id
+
+        if not recv_acc or not pay_acc:
+            raise UserError(_("El productor debe tener cuentas por cobrar y por pagar configuradas."))
+
+        journal = self.company_id.grain_netting_journal_id
+
+        net_move = self.env["account.move"].create({
+            "move_type": "entry",
+            "date": fields.Date.context_today(self),
+            "ref": f"Compensación Canje: {self.move_id.name} vs {self.bill_id.name} ({self.liquidation_id.liquidation_type.upper()})",
+            "journal_id": journal.id,
+            "company_id": self.company_id.id,
+            "line_ids": [
+                (0, 0, {
+                    "name": _("Compensación Canje (Dr A/P)"),
+                    "partner_id": partner.id,
+                    "account_id": pay_acc.id,
+                    "debit": self.amount,
+                    "credit": 0.0,
+                }),
+                (0, 0, {
+                    "name": _("Compensación Canje (Cr A/R)"),
+                    "partner_id": partner.id,
+                    "account_id": recv_acc.id,
+                    "debit": 0.0,
+                    "credit": self.amount,
+                }),
+            ],
+        })
+        net_move.action_post()
+
+        recv_line_net = net_move.line_ids.filtered(lambda l: l.account_id == recv_acc and l.credit > 0 and not l.reconciled)
+        recv_lines_inv = self.move_id.line_ids.filtered(lambda l: l.account_id == recv_acc and not l.reconciled)
+        (recv_line_net + recv_lines_inv).reconcile()
+
+        pay_line_net = net_move.line_ids.filtered(lambda l: l.account_id == pay_acc and l.debit > 0 and not l.reconciled)
+        pay_lines_bill = self.bill_id.line_ids.filtered(lambda l: l.account_id == pay_acc and not l.reconciled)
+        (pay_line_net + pay_lines_bill).reconcile()
+
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Asiento de compensación"),
+            "res_model": "account.move",
+            "res_id": net_move.id,
+            "view_mode": "form",
+        }

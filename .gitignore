@@ -1,10 +1,29 @@
-*.pyc
+# Python / Odoo
 __pycache__/
-*.log
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.so
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
 *.swp
 *.swo
+
+# Backups / temporales que no deben ir al repo
 *.bak
-*.bak.*
-.DS_Store
-.idea/
-.vscode/
+*.backup
+*.BROKEN.*
+*~ 
+
+# Bundles / dumps generados en VM
+xml_bundle.txt
+xml_bundle.txt.*
+*.b64
+
+# Logs
+*.log

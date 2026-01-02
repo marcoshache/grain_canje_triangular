@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+from odoo import fields, models
+
+
+class RegisterGrainLSGWizard(models.TransientModel):
+    _inherit = "register.grain.lsg.wizard"
+
+    # Campos que la vista usa pero el modelo no tenía (evita "Missing field string information")
+    grade = fields.Char(string="Grado")
+
+    # Subtotales / totales (varios nombres posibles según la vista)
+    subtotal = fields.Monetary(string="Subtotal", readonly=True, currency_field="currency_id")
+    tax_amount = fields.Monetary(string="IVA", readonly=True, currency_field="currency_id")
+    total = fields.Monetary(string="Total", readonly=True, currency_field="currency_id")
+
+    # Aliases comunes que a veces aparecen en XML
+    amount_untaxed = fields.Monetary(string="Subtotal", readonly=True, currency_field="currency_id")
+    amount_tax = fields.Monetary(string="IVA", readonly=True, currency_field="currency_id")
+    amount_total = fields.Monetary(string="Total", readonly=True, currency_field="currency_id")
+
+    net_amount = fields.Monetary(string="Neto", readonly=True, currency_field="currency_id")
+    gross_amount = fields.Monetary(string="Bruto", readonly=True, currency_field="currency_id")
+
+    # Si el wizard no trae currency_id, la agregamos para Monetary
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Moneda",
+        readonly=True,
+        default=lambda self: self.env.company.currency_id.id,
+    )

@@ -8,6 +8,7 @@ from . import grain_liquidation
 from . import grain_liquidation_actions
 from . import grain_liquidation_workflow
 from . import grain_liquidation_patch
+from . import grain_liquidation_default_menu
 from . import account_move_grain_netting
 
 from . import res_company

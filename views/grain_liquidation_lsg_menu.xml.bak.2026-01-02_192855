@@ -1,0 +1,23 @@
+<odoo>
+    <!-- Acción: listar LSG -->
+    <record id="action_grain_liquidation_lsg" model="ir.actions.act_window">
+        <field name="name">Liquidaciones (LSG)</field>
+        <field name="res_model">grain.liquidation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('liquidation_type','=','lsg')]</field>
+    </record>
+
+    <!-- Menú: listar LSG -->
+    <menuitem id="menu_grain_liquidation_lsg"
+              name="Liquidaciones (LSG)"
+              parent="grain_canje_triangular.menu_grain_liquidation_root"
+              action="action_grain_liquidation_lsg"
+              sequence="15"/>
+
+    <!-- Menú: registrar LSG -->
+    <menuitem id="menu_register_lsg"
+              name="Registrar LSG"
+              parent="grain_canje_triangular.menu_grain_liquidation_root"
+              action="grain_canje_triangular.action_register_grain_lsg_wizard"
+              sequence="25"/>
+</odoo>
