@@ -20,6 +20,15 @@ class GrainNettingWizard(models.TransientModel):
         required=True,
     )
 
+    # Alias para compatibilidad con vistas viejas que referencian grain_bill_id
+    grain_bill_id = fields.Many2one(
+        "account.move",
+        string="Vendor Bill LPG",
+        related="lpg_bill_id",
+        readonly=False,
+        domain="[('move_type','=','in_invoice'),('state','=','posted'),('payment_state','!=','paid'),('partner_id','=',producer_id)]",
+    )
+
     amount = fields.Monetary(string="Importe a compensar", currency_field="currency_id", required=True)
 
     def action_net(self):

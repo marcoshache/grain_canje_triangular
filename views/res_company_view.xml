@@ -13,7 +13,10 @@
                 <group string="Liquidaciones de granos (LPG/LSG) y compensaciones">
                     <field name="grain_clearing_account_id"/>
                     <field name="grain_liquidation_journal_id"/>
+                    <field name="grain_lpg_tax_id"/>
+
                     <field name="grain_netting_journal_id"/>
+                    <field name="grain_netting_payment_journal_id"/>
                 </group>
             </xpath>
         </field>

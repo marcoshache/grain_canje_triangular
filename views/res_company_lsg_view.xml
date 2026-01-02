@@ -1,0 +1,13 @@
+<odoo>
+    <record id="view_company_form_canje_lsg_tax" model="ir.ui.view">
+        <field name="name">res.company.form.canje.lsg.tax</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="grain_canje_triangular.view_company_form_canje"/>
+        <field name="arch" type="xml">
+            <!-- Insertamos IVA default LSG al lado del IVA default LPG -->
+            <xpath expr="//field[@name='grain_lpg_tax_id']" position="after">
+                <field name="grain_lsg_tax_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

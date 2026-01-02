@@ -1,8 +1,27 @@
 <odoo>
+    <!-- Acción general (LPG/LSG) -->
     <record id="action_grain_liquidation" model="ir.actions.act_window">
+        <field name="name">Liquidaciones (LPG/LSG)</field>
+        <field name="res_model">grain.liquidation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Acción específica LSG -->
+    <record id="action_grain_liquidation_lsg" model="ir.actions.act_window">
+        <field name="name">Liquidaciones (LSG)</field>
+        <field name="res_model">grain.liquidation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('liquidation_type','=','lsg')]</field>
+        <field name="context">{'default_liquidation_type':'lsg'}</field>
+    </record>
+
+    <!-- Acción específica LPG -->
+    <record id="action_grain_liquidation_lpg" model="ir.actions.act_window">
         <field name="name">Liquidaciones (LPG)</field>
         <field name="res_model">grain.liquidation</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('liquidation_type','=','lpg')]</field>
+        <field name="context">{'default_liquidation_type':'lpg'}</field>
     </record>
 
     <menuitem id="menu_grain_liquidation_root"
@@ -11,14 +30,32 @@
               sequence="58"/>
 
     <menuitem id="menu_grain_liquidation"
-              name="Liquidaciones (LPG)"
+              name="Liquidaciones (LPG/LSG)"
               parent="menu_grain_liquidation_root"
               action="action_grain_liquidation"
               sequence="10"/>
+
+    <menuitem id="menu_grain_liquidation_lpg"
+              name="Liquidaciones (LPG)"
+              parent="menu_grain_liquidation_root"
+              action="action_grain_liquidation_lpg"
+              sequence="11"/>
+
+    <menuitem id="menu_grain_liquidation_lsg"
+              name="Liquidaciones (LSG)"
+              parent="menu_grain_liquidation_root"
+              action="action_grain_liquidation_lsg"
+              sequence="12"/>
 
     <menuitem id="menu_register_lpg"
               name="Registrar LPG"
               parent="menu_grain_liquidation_root"
               action="action_register_grain_lpg_wizard"
               sequence="20"/>
+
+    <menuitem id="menu_register_lsg"
+              name="Registrar LSG"
+              parent="menu_grain_liquidation_root"
+              action="action_register_grain_lsg_wizard"
+              sequence="30"/>
 </odoo>

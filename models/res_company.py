@@ -1,34 +1,25 @@
-from odoo import models, fields
+# -*- coding: utf-8 -*-
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    # Config actual del módulo (pago a proveedor / canje existente)
-    canje_account_id = fields.Many2one(
-        "account.account",
-        string="Cuenta Cta Cte Cereal Productor",
-        help="Cuenta contable para la cuenta corriente de cereal productor.",
-    )
-    canje_journal_id = fields.Many2one(
+    canje_account_id = fields.Many2one("account.account", string="Cuenta Canje")
+    canje_journal_id = fields.Many2one("account.journal", string="Diario Canje")
+
+    grain_clearing_account_id = fields.Many2one("account.account", string="Cuenta puente Granos / Canje")
+    grain_liquidation_journal_id = fields.Many2one("account.journal", string="Diario Liquidaciones de Granos")
+
+    grain_netting_journal_id = fields.Many2one("account.journal", string="Diario Compensaciones (Asiento)")
+
+    # NUEVO: diario para pagos (bank/cash) para que el motor de retenciones pueda actuar
+    grain_netting_payment_journal_id = fields.Many2one(
         "account.journal",
-        string="Diario de Canje",
-        help="Diario contable utilizado para las operaciones de canje (pago a proveedor).",
+        string="Diario Compensaciones (Pago)",
+        domain="[('type','in',('bank','cash')), ('company_id','=',id)]",
+        help="Se usa cuando la compensación se registra como pagos (inbound/outbound). "
+             "Recomendado para disparar retenciones si están configuradas.",
     )
 
-    # NUEVO: Config para LPG/LSG + nettings (Tramo A)
-    grain_clearing_account_id = fields.Many2one(
-        "account.account",
-        string="Cuenta puente Granos a liquidar / Canje",
-        help="Cuenta puente conciliable (Activo Corriente) para registrar liquidaciones de granos.",
-    )
-    grain_liquidation_journal_id = fields.Many2one(
-        "account.journal",
-        string="Diario Liquidaciones de Granos",
-        help="Diario de compras para registrar LPG/LSG (liquidaciones).",
-    )
-    grain_netting_journal_id = fields.Many2one(
-        "account.journal",
-        string="Diario Compensaciones Canje",
-        help="Diario de asiento (Miscellaneous) para compensaciones/netting (A/R vs A/P, Productor vs Corredor).",
-    )
+    grain_lpg_tax_id = fields.Many2one("account.tax", string="IVA compra default LPG")

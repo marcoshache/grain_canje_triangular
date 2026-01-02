@@ -9,4 +9,5 @@ access_grain_liquidation_user,access_grain_liquidation_user,model_grain_liquidat
 
 # Wizards
 access_register_grain_lpg_wizard_user,access_register_grain_lpg_wizard_user,model_register_grain_lpg_wizard,base.group_user,1,1,1,1
+access_register_grain_lsg_wizard_user,access_register_grain_lsg_wizard_user,model_register_grain_lsg_wizard,base.group_user,1,1,1,1
 access_grain_netting_wizard_user,access_grain_netting_wizard_user,model_grain_netting_wizard,base.group_user,1,1,1,1

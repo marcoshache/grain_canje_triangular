@@ -34,7 +34,7 @@ class GrainLiquidation(models.Model):
         qty = self.qty_tn or 0.0
         price_unit = self.price_per_tn or 0.0
 
-        # FIX: usar amount_total (existe) como fuente principal
+        # ✅ FIX: usar amount_total (existe) como fuente principal
         amount = (self.amount_total or 0.0) or (qty * price_unit)
 
         if not producer:
@@ -72,7 +72,6 @@ class GrainLiquidation(models.Model):
         return bill
 
     def action_post(self):
-        """Publicar liquidación (por ahora: crea bill y la publica)."""
         for rec in self:
             bill = rec._ensure_move()
             if bill.state != "posted":

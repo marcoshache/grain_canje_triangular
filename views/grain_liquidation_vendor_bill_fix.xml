@@ -5,21 +5,34 @@
         <field name="inherit_id" ref="grain_canje_triangular.view_grain_liquidation_form"/>
         <field name="arch" type="xml">
 
-            <!-- Si la vista tenía un statusbar duplicado dentro del sheet, lo removemos -->
-            <xpath expr="//sheet//field[@name='state' and @widget='statusbar']" position="replace"/>
-
-            <!-- Botón para abrir la Vendor Bill vinculada -->
+            <!-- Smart button para abrir el comprobante vinculado -->
             <xpath expr="//header" position="inside">
-                <field name="vendor_bill_id" invisible="1"/>
-                <button name="action_open_vendor_bill"
+                <button name="action_open_move"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-file-text-o"
-                        attrs="{'invisible': [('vendor_bill_id', '=', False)]}">
+                        attrs="{'invisible': [('move_id', '=', False)]}">
                     <div class="o_stat_info">
-                        <span class="o_stat_text">Factura prov. (LPG)</span>
+                        <span class="o_stat_text">Comprobante</span>
                     </div>
                 </button>
+
+                <button name="action_open_payment"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        attrs="{'invisible': [('payment_id', '=', False)]}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Pago (LSG)</span>
+                    </div>
+                </button>
+            </xpath>
+
+            <!-- LSG: seleccionar factura proveedor a pagar -->
+            <xpath expr="//field[@name='producer_id']" position="after">
+                <field name="vendor_bill_id"
+                       attrs="{'invisible': [('liquidation_type','!=','lsg')],
+                               'required': [('liquidation_type','=','lsg')]}"/>
             </xpath>
 
         </field>

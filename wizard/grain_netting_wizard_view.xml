@@ -8,10 +8,16 @@
                     <field name="move_id"/>
                     <field name="producer_id"/>
                 </group>
+
+                <group string="Liquidación">
+                    <field name="liquidation_id"/>
+                    <field name="bill_id" readonly="1"/>
+                </group>
+
                 <group>
-                    <field name="lpg_bill_id"/>
                     <field name="amount"/>
                 </group>
+
                 <footer>
                     <button string="Compensar" name="action_net" type="object" class="btn-primary"/>
                     <button string="Cancelar" special="cancel" class="btn-secondary"/>

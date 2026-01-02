@@ -12,3 +12,5 @@ from . import account_move_grain_netting
 
 from . import res_company
 from . import res_config_settings
+from . import grain_liquidation_lsg
+from . import grain_lsg_config
