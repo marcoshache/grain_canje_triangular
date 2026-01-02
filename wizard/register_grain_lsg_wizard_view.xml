@@ -3,8 +3,9 @@
         <field name="name">register.grain.lsg.wizard.form</field>
         <field name="model">register.grain.lsg.wizard</field>
         <field name="arch" type="xml">
-            <form string="Registrar LSG">
+            <form string="Registrar LSG (Pago en especie)">
                 <group>
+                    <field name="company_id" invisible="1"/>
                     <field name="date"/>
                     <field name="coe"/>
                     <field name="producer_id"/>
@@ -32,8 +33,7 @@
                     <field name="amount_total" readonly="1"/>
                 </group>
 
-                <group string="Configuración contable">
-                    <field name="clearing_account_id"/>
+                <group string="Pago (se aplicará luego desde la factura)">
                     <field name="journal_id"/>
                 </group>
 
