@@ -1,8 +1,10 @@
-__pycache__/
 *.pyc
-*.pyo
+__pycache__/
 *.log
+*.swp
+*.swo
+*.bak
+*.bak.*
+.DS_Store
 .idea/
 .vscode/
-.DS_Store
-*.swp
