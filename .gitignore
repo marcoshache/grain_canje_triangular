@@ -27,3 +27,7 @@ xml_bundle.txt.*
 
 # Logs
 *.log
+*.bak.*
+*.BROKEN.*
+xml_bundle.txt
+xml_bundle.txt.b64
