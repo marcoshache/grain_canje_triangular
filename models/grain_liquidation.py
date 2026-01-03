@@ -23,7 +23,6 @@ class GrainLiquidation(models.Model):
     company_id = fields.Many2one("res.company", required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one(related="company_id.currency_id", store=True, readonly=True)
 
-    # AFIP-ish / referencia
     coe = fields.Char(string="C.O.E.")
     delivery_date = fields.Date(string="Fecha entrega")
     broker_id = fields.Many2one("res.partner", string="Corredor")
@@ -79,14 +78,17 @@ class GrainLiquidation(models.Model):
         tracking=True,
     )
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super().default_get(fields_list)
-        company = self.env.company
-        ltype = res.get("liquidation_type") or "lpg"
-        if "tax_id" in fields_list and not res.get("tax_id"):
-            res["tax_id"] = (company.grain_lsg_tax_id.id if ltype == "lsg" else company.grain_lpg_tax_id.id) or False
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            name = vals.get("name")
+            if not name or name in ("/", "New", _("New")):
+                ltype = vals.get("liquidation_type") or self.env.context.get("default_liquidation_type") or "lpg"
+                code = "grain.liquidation.lsg" if ltype == "lsg" else "grain.liquidation.lpg"
+                vals["name"] = self.env["ir.sequence"].next_by_code(code) or _("New")
+        return super().create(vals_list)
+
+
 
     @api.onchange("liquidation_type", "company_id")
     def _onchange_liquidation_type_tax(self):
@@ -124,19 +126,6 @@ class GrainLiquidation(models.Model):
             "res_id": self.move_id.id,
             "view_mode": "form",
             "views": [(self.env.ref("account.view_move_form").id, "form")],
-            "target": "current",
-        }
-
-    def action_open_payment(self):
-        self.ensure_one()
-        if not self.payment_id:
-            raise UserError(_("No hay pago vinculado."))
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Pago"),
-            "res_model": "account.payment",
-            "res_id": self.payment_id.id,
-            "view_mode": "form",
             "target": "current",
         }
 

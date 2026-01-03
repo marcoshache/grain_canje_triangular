@@ -5,13 +5,13 @@
         <field name="arch" type="xml">
             <form string="Compensación Canje (A/R vs A/P)">
                 <group>
-                    <field name="move_id"/>
-                    <field name="producer_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="move_id" readonly="1"/>
+                    <field name="producer_id" readonly="1"/>
                 </group>
 
-                <group string="Liquidación">
-                    <field name="liquidation_id"/>
-                    <field name="bill_id" readonly="1"/>
+                <group string="Liquidación / LPG">
+                    <field name="lpg_bill_id" required="1"/>
                 </group>
 
                 <group>
@@ -19,8 +19,13 @@
                 </group>
 
                 <footer>
-                    <button string="Compensar" name="action_net" type="object" class="btn-primary"/>
-                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                    <button string="Compensar"
+                            name="action_net"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancelar"
+                            special="cancel"
+                            class="btn-secondary"/>
                 </footer>
             </form>
         </field>
@@ -30,8 +35,7 @@
         <field name="name">Compensación Canje</field>
         <field name="res_model">grain.netting.wizard</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_grain_netting_wizard"/>
         <field name="target">new</field>
-        <field name="context">{}</field>
+        <field name="view_id" ref="view_grain_netting_wizard"/>
     </record>
 </odoo>

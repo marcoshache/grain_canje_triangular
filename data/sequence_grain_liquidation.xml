@@ -1,0 +1,19 @@
+<odoo noupdate="0">
+
+    <record id="seq_grain_liquidation_lpg" model="ir.sequence">
+        <field name="name">Liquidación Primaria de Granos (LPG)</field>
+        <field name="code">grain.liquidation.lpg</field>
+        <field name="prefix">LPG/%(year)s/%(month)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_grain_liquidation_lsg" model="ir.sequence">
+        <field name="name">Liquidación Secundaria de Granos (LSG)</field>
+        <field name="code">grain.liquidation.lsg</field>
+        <field name="prefix">LSG/%(year)s/%(month)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>

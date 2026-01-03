@@ -22,6 +22,10 @@
         'views/account_move_out_invoice_canje.xml',
         'security/security_groups.xml',
         'security/ir.model.access.csv',
+
+        # Secuencias LPG/LSG (Variante A)
+        'data/sequence_grain_liquidation.xml',
+
         'data/sequence_canje_contract.xml',
         'wizard/apply_grain_canje_view.xml',
         'views/grain_canje_contract_view.xml',

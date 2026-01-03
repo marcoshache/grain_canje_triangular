@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="grain_canje_triangular.view_grain_liquidation_form"/>
         <field name="arch" type="xml">
 
-            <!-- Smart button para abrir el comprobante vinculado -->
+            <!-- Smart button para abrir el comprobante vinculado (bill/payment move) -->
             <xpath expr="//header" position="inside">
                 <button name="action_open_move"
                         type="object"
@@ -16,23 +16,6 @@
                         <span class="o_stat_text">Comprobante</span>
                     </div>
                 </button>
-
-                <button name="action_open_payment"
-                        type="object"
-                        class="oe_stat_button"
-                        icon="fa-credit-card"
-                        attrs="{'invisible': [('payment_id', '=', False)]}">
-                    <div class="o_stat_info">
-                        <span class="o_stat_text">Pago (LSG)</span>
-                    </div>
-                </button>
-            </xpath>
-
-            <!-- LSG: seleccionar factura proveedor a pagar -->
-            <xpath expr="//field[@name='producer_id']" position="after">
-                <field name="vendor_bill_id"
-                       attrs="{'invisible': [('liquidation_type','!=','lsg')],
-                               'required': [('liquidation_type','=','lsg')]}"/>
             </xpath>
 
         </field>

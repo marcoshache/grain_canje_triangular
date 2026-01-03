@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_grain_liquidation_form_lsg_payment" model="ir.ui.view">
+        <field name="name">grain.liquidation.form.lsg.payment</field>
+        <field name="model">grain.liquidation</field>
+        <field name="inherit_id" ref="grain_canje_triangular.view_grain_liquidation_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Botones en header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_apply_lsg_payment"
+                        type="object"
+                        string="Aplicar como pago (LSG)"
+                        class="btn-primary"
+                        attrs="{'invisible': ['|',('liquidation_type','!=','lsg'),('payment_id','!=',False)]}"/>
+
+                <button name="action_open_lsg_payment"
+                        type="object"
+                        string="Abrir Pago (LSG)"
+                        class="btn-secondary"
+                        attrs="{'invisible': ['|',('liquidation_type','!=','lsg'),('payment_id','=',False)]}"/>
+            </xpath>
+
+            <!-- Campo para seleccionar la factura del proveedor (opcional al crear) -->
+            <xpath expr="//sheet//group" position="after">
+                <group string="Aplicación LSG" attrs="{'invisible':[('liquidation_type','!=','lsg')]}">
+                    <field name="grain_bill_id"/>
+                    <field name="payment_id" readonly="1"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>
